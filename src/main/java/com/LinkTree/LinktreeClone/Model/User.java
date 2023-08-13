@@ -1,6 +1,6 @@
 package com.LinkTree.LinktreeClone.Model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 
 @Entity
