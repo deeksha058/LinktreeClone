@@ -1,5 +1,7 @@
 package com.LinkTree.LinktreeClone.Controller;
 
+import com.LinkTree.LinktreeClone.Exception.LinkNotFoundException;
+import com.LinkTree.LinktreeClone.Exception.UserNotFoundException;
 import com.LinkTree.LinktreeClone.Model.Link;
 import com.LinkTree.LinktreeClone.Model.User;
 import com.LinkTree.LinktreeClone.Service.LinkService;
@@ -8,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 
 @RestController
@@ -22,28 +26,35 @@ public class LinkController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<?> saveLoadsData(@RequestBody Link links){
+    public ResponseEntity<?> saveLinkData(@RequestBody Link links){
 
-        try {
-            User user = userService.getUserById(links.getUserId());
+        Optional<User> user = userService.getUserById(links.getUserId());
+        if(user.isEmpty()) {
+            return  new ResponseEntity<>(new UserNotFoundException().getMessage(), HttpStatus.OK);
+        }
+
+        try{
 
             linkService.saveLinksData(links);
             return  new ResponseEntity<>("Data added successfully!" , HttpStatus.CREATED);
-        }catch (Exception e) {
+        }catch (Exception e){
 
-            return  new ResponseEntity<>("User with UserId " + links.getUserId() +" not present int the Database!" , HttpStatus.OK);
+            return  new ResponseEntity<>( "Please fill the complete details!", HttpStatus.OK);
         }
     }
 
     @GetMapping("/{linkId}")
-    public ResponseEntity<Link> loadsDataById(@PathVariable("linkId") Long id){
+    public ResponseEntity<?> linkDataById(@PathVariable("linkId") Long id){
 
-        Link dataById = linkService.getDataById(id);
+        Optional<Link> dataById = linkService.getDataById(id);
+        if(dataById.isEmpty()) {
+            return  new ResponseEntity<>(new LinkNotFoundException().getMessage(), HttpStatus.OK);
+        }
         return new ResponseEntity<>(dataById, HttpStatus.OK);
     }
 
     @PutMapping("/{linkId}")
-    public ResponseEntity<String> updateLoadsData(@RequestBody Link link , @PathVariable("linkId") Long id ) {
+    public ResponseEntity<String> updateLinkData(@RequestBody Link link , @PathVariable("linkId") Long id ) {
 
         Link newLinkData = linkService.updateLinkData(link, id);
         if (newLinkData == null){
@@ -53,17 +64,17 @@ public class LinkController {
     }
 
     @DeleteMapping("/{linkId}")
-    public ResponseEntity<String> deleteLoadsData(@PathVariable("loadId") Long id) {
+    public ResponseEntity<String> deleteLinkData(@PathVariable("linkId") Long id) {
 
-        Link deleteLoadsData = linkService.deleteLinkData(id);
-        if(deleteLoadsData == null){
-            return  new ResponseEntity<>("Data with this Id " + id  + " is not Present in Database", HttpStatus.OK);
+        Optional<Link> deleteLoadsData = linkService.deleteLinkData(id);
+        if(deleteLoadsData.isEmpty()) {
+            return  new ResponseEntity<>(new LinkNotFoundException().getMessage(), HttpStatus.OK);
         }
         return new ResponseEntity<>("Data Deleted Successfully!", HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<?> loadsData(){
+    public ResponseEntity<?> linkData(){
 
         return new ResponseEntity<>(linkService.getAllData() , HttpStatus.OK);
     }

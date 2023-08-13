@@ -26,16 +26,11 @@ public class LinkService {
         return saveLinkData;
     }
 
-    public Link deleteLinkData(Long id) {
-        try{
-            Link linksData = linkRepository.findById(id).orElseThrow();
-            linkRepository.deleteById(id);
-            return linksData;
+    public Optional<Link> deleteLinkData(Long id) {
 
-        }catch (Exception e){
-            System.out.println("LoadsData not found");
-        }
-        return null;
+        Optional<Link> linksData = linkRepository.findById(id);
+        linkRepository.deleteById(id);
+        return linksData;
     }
 
     public Link updateLinkData(Link loads , Long id ) {
@@ -56,14 +51,10 @@ public class LinkService {
         return null;
     }
 
-    public Link getDataById(Long id) {
-        try {
-            Link linksData = linkRepository.findById(id).orElseThrow();
-            return linksData;
-        }catch (Exception e) {
-            System.out.println("Link not found");
-            return null;
-        }
+    public Optional<Link> getDataById(Long id) {
+
+        Optional<Link> linksData = linkRepository.findById(id);
+        return linksData;
     }
 
     public List<Link> getLinksByUserId(Long userId){

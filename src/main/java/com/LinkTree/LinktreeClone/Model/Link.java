@@ -15,9 +15,13 @@ public class Link {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false)
     private String url;
 
+    @Column(nullable = false)
     private Long userId;
 
 }

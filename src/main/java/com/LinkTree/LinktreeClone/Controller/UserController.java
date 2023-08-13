@@ -1,6 +1,5 @@
 package com.LinkTree.LinktreeClone.Controller;
 
-import com.LinkTree.LinktreeClone.Model.Link;
 import com.LinkTree.LinktreeClone.Model.User;
 import com.LinkTree.LinktreeClone.Service.LinkService;
 import com.LinkTree.LinktreeClone.Service.UserService;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -35,21 +33,13 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<?> getUser(@PathVariable("userId") Long id){
 
-        try{
-
-            return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK) ;
-        }
-        catch (Exception e){
-
-            return new ResponseEntity<>("User with UserId " + id +" Not Present int the Database!" , HttpStatus.OK);
-        }
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK) ;
     }
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable("userId") Long id){
 
         linkService.deleteDataByUserId(id);
-
         return new ResponseEntity<>(userService.deleteUserById(id), HttpStatus.OK) ;
     }
 
