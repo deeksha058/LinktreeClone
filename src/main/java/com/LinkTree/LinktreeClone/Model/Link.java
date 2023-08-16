@@ -1,6 +1,8 @@
 package com.LinkTree.LinktreeClone.Model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -15,13 +17,18 @@ public class Link {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false ,unique = true)
+    @NotBlank(message = "Title can't be blank")
+    @NotNull
+    @Column(nullable = false)
     private String title;
 
+
+    @NotBlank(message = "Url can't be blank")
     @Column(nullable = false)
+    @NotNull
     private String url;
 
-    @Column(nullable = false)
+    @NotNull
     private Long userId;
 
 }

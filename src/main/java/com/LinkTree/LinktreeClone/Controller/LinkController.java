@@ -6,9 +6,11 @@ import com.LinkTree.LinktreeClone.Model.Link;
 import com.LinkTree.LinktreeClone.Model.User;
 import com.LinkTree.LinktreeClone.Service.LinkService;
 import com.LinkTree.LinktreeClone.Service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -25,10 +27,13 @@ public class LinkController {
     @Autowired
     private UserService userService;
 
-    @PostMapping
-    public ResponseEntity<?> saveLinkData(@RequestBody Link links){
+    @PostMapping("/add")
+    public ResponseEntity<?> saveLinkData(@RequestBody Link links)  throws MethodArgumentNotValidException {
 
-        Optional<User> user = userService.getUserById(links.getUserId());
+        System.out.println("THis Is the User Id"  + links.getUserId());
+
+        Long k = links.getUserId();
+        Optional<User> user = userService.getUserById(k);
         if(user.isEmpty()) {
             return  new ResponseEntity<>(new UserNotFoundException().getMessage(), HttpStatus.OK);
         }
@@ -39,11 +44,17 @@ public class LinkController {
             return  new ResponseEntity<>("Data added successfully!" , HttpStatus.CREATED);
         }catch (Exception e){
 
-            return  new ResponseEntity<>( "Please fill the complete details!", HttpStatus.OK);
+            return  new ResponseEntity<>( e.getLocalizedMessage(), HttpStatus.OK);
         }
     }
 
-    @GetMapping("/{linkId}")
+    @GetMapping("/get")
+    public ResponseEntity<?> linkData(){
+
+        return new ResponseEntity<>(linkService.getAllData() , HttpStatus.OK);
+    }
+
+    @GetMapping("/get/{linkId}")
     public ResponseEntity<?> linkDataById(@PathVariable("linkId") Long id){
 
         Optional<Link> dataById = linkService.getDataById(id);
@@ -51,6 +62,12 @@ public class LinkController {
             return  new ResponseEntity<>(new LinkNotFoundException().getMessage(), HttpStatus.OK);
         }
         return new ResponseEntity<>(dataById, HttpStatus.OK);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getAllLinksWithUserId(@PathVariable("userId") Long id){
+
+        return new ResponseEntity<>(linkService.getLinksByUserId(id) , HttpStatus.OK);
     }
 
     @PutMapping("/{linkId}")
@@ -73,9 +90,5 @@ public class LinkController {
         return new ResponseEntity<>("Data Deleted Successfully!", HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<?> linkData(){
 
-        return new ResponseEntity<>(linkService.getAllData() , HttpStatus.OK);
-    }
 }
