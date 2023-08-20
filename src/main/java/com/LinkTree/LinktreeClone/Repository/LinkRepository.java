@@ -16,6 +16,8 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
     @Query(value = "SELECT * FROM link WHERE user_id = :userId" ,nativeQuery = true)
     List<Link> getAllLinksByUserId(Long userId);
 
+    @Query(value = "SELECT * FROM link ORDER BY link_visit_count DESC" ,nativeQuery = true)
+    List<Link> findAll();
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM link WHERE user_id = :userId" ,nativeQuery = true)

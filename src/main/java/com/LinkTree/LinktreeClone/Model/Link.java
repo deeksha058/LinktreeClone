@@ -28,6 +28,8 @@ public class Link {
     @NotNull
     private String url;
 
+    private Long linkVisitCount;
+
     @NotNull
     private Long userId;
 

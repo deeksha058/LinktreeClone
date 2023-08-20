@@ -30,10 +30,10 @@ public class LinkController {
     @PostMapping("/add")
     public ResponseEntity<?> saveLinkData(@RequestBody Link links)  throws MethodArgumentNotValidException {
 
-        System.out.println("THis Is the User Id"  + links.getUserId());
+        Long count = 0L;
+        links.setLinkVisitCount(count);
 
-        Long k = links.getUserId();
-        Optional<User> user = userService.getUserById(k);
+        Optional<User> user = userService.getUserById(links.getUserId());
         if(user.isEmpty()) {
             return  new ResponseEntity<>(new UserNotFoundException().getMessage(), HttpStatus.OK);
         }
@@ -61,6 +61,13 @@ public class LinkController {
         if(dataById.isEmpty()) {
             return  new ResponseEntity<>(new LinkNotFoundException().getMessage(), HttpStatus.OK);
         }
+        Long count = dataById.get().getLinkVisitCount();
+
+        count++;
+        dataById.get().setId(id);
+        dataById.get().setLinkVisitCount(count);
+
+        linkService.saveLinksData(dataById.get());
         return new ResponseEntity<>(dataById, HttpStatus.OK);
     }
 
