@@ -17,10 +17,4 @@ public class LinktreeCloneApplication {
 
 		System.out.println("Run Successfully!");
 	}
-
-//	@Bean
-//	public BCryptPasswordEncoder bCryptPasswordEncoder(){
-//		return new BCryptPasswordEncoder();
-//	}
-
 }

@@ -18,4 +18,6 @@ public interface UserService {
     public String deleteUserById(Long id);
 
     public String updateUserData(User user , Long id );
+
+    User findUser(String email);
 }

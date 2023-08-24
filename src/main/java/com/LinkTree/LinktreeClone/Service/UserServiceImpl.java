@@ -33,13 +33,6 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.badRequest().body("Error: Email is already in use!");
         }
 
-        SimpleMailMessage messageToManager = new SimpleMailMessage();
-        messageToManager.setTo("deekshajindal085@gmail.com");
-        messageToManager.setSubject("New Employee Added!");
-        messageToManager.setText("Deeksha Jindal will now work under you. Mobile number is 9084298499 and email is deekshajindal058@gmail.com");
-        emailService.sendEmail(messageToManager);
-
-
         userRepository.save(user);
 
         ConfirmationToken confirmationToken = new ConfirmationToken(user);
@@ -115,6 +108,12 @@ public class UserServiceImpl implements UserService {
             return "linkData not found in database ";
         }
     }
+
+    @Override
+    public User findUser(String email) {
+        return userRepository.findByUserName(email);
+    }
+
 }
 
 

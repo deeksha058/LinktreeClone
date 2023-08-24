@@ -10,6 +10,8 @@ import com.LinkTree.LinktreeClone.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,8 +30,16 @@ public class LinkController {
     private UserService userService;
 
     @PostMapping("/add")
-    public ResponseEntity<?> saveLinkData(@RequestBody Link links)  throws MethodArgumentNotValidException {
+    public ResponseEntity<?> saveLinkData(@RequestBody Link links )  throws MethodArgumentNotValidException {
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        System.out.println(username);
+        User user1 = userService.findUser(username);
+
+        if(user1.getId() != links.getUserId()){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
         Long count = 0L;
         links.setLinkVisitCount(count);
 

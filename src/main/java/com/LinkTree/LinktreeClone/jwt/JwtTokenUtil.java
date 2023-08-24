@@ -22,7 +22,7 @@ public class JwtTokenUtil {
 	public String generateAccessToken(User user) {
 		return Jwts.builder()
 				.setSubject(String.format("%s,%s", user.getId(), user.getEmail()))
-				.setIssuer("Softnerve")
+				.setIssuer("Deeksha")
 				.setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
 				.signWith(SignatureAlgorithm.HS512, SECRET_KEY)
